@@ -1,6 +1,6 @@
 // Mongoose Models
-const Project = require("../models/project");
-const Client = require("../models/client");
+const Project = require("../models/project.js");
+const Client = require("../models/client.js");
 
 const {
   GraphQLObjectType,
@@ -9,9 +9,9 @@ const {
   GraphQLSchema,
   GraphQLList,
   GraphQLNonNull,
-  GraphQLScalarType,
   GraphQLEnumType,
 } = require("graphql");
+const project = require("../models/project.js");
 
 // Project Type
 const ProjectType = new GraphQLObjectType({
@@ -101,6 +101,11 @@ const mutation = new GraphQLObjectType({
         id: { type: GraphQLNonNull(GraphQLID) },
       },
       resolve(parent, args) {
+        Project.find({clientId: args.id}).then((projects) =>{
+          projects.forEach((project)=>{
+            project.deleteOne()
+          })
+        })
         return Client.findByIdAndRemove(args.id);
       },
     },
