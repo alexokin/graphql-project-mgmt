@@ -25,14 +25,19 @@ if (process.env.NODE_ENV === 'production') {
 // Connect to database
 connectDB();
 
+
+
 app.use(
   "/graphql",
   graphqlHTTP({
     schema,
-    graphiql: process.env.NODE_ENV === "production",
+    graphiql: process.env.NODE_ENV === "development",
   })
 );
 
+app.get('/**', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'))
+})
 
 
 app.listen(port, console.log(`Server is running on port ${port}`));
